@@ -1,0 +1,18 @@
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// +--------------------------------------------------------------------------------------------+ //
+// IMCake Version
+//
+// Holds a static string representing the current version of IMCake
+//
+// Copyright (c) Atsushi Matsuo, Masayuki Nii
+//
+// Licensed under The MIT License
+// For full copyright and license information, please see the LICENSE.txt
+// Redistributions of files must retain the above copyright notice.
+//
+// @copyright     Copyright (c) Atsushi Matsuo, Masayuki Nii
+// @link          http://www.famlog.jp/imcake/
+// @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+// +--------------------------------------------------------------------------------------------+ //
+////////////////////////////////////////////////////////////////////////////////////////////////////
+0.1.0-alpha
