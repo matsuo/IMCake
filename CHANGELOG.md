@@ -1,5 +1,9 @@
 # Changelog
 
+## IMCake 0.1.1-alpha
+
+* Update README.
+
 ## IMCake 0.1.0-alpha
 
 * Initial Release.

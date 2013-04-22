@@ -33,6 +33,8 @@ This product should be considered a work in progress, please test and use at you
 
 ## Example
 
+1. Controller Example
+
 		<?php
 
 		App::uses('AppController', 'Controller');
