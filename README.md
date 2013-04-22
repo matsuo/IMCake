@@ -12,12 +12,12 @@ This product should be considered a work in progress, please test and use at you
 
 1. Install IMCake.
 
-	cd /path/to/root/app/Plugin
-	git clone git://github.com/matsuo/IMCake.git IMCake
+		cd /path/to/root/app/Plugin
+		git clone git://github.com/matsuo/IMCake.git IMCake
 
 2. Add the following line to /path/to/root/app/Config/bootstrap.php to load this plugin.
 
-	CakePlugin::load('IMCake');
+		CakePlugin::load('IMCake');
 
 3. Write your model file.
 
@@ -25,27 +25,27 @@ This product should be considered a work in progress, please test and use at you
 
 5. Add the following line to your controller file to use this plugin, for example.
 
-	public $components = array('IMCake.IMCake');
+		public $components = array('IMCake.IMCake');
 
 6. Write the following line in your action method.
 
-	$this->IMCake->render($id);
+		$this->IMCake->render($id);
 
 ## Example
 
 		<?php
-		
+
 		App::uses('AppController', 'Controller');
-		
+
 		class PeopleController extends AppController
 		{
-		
+
 		    public $components = array('IMCake.IMCake');
-		
+
 		    function view($id="") {
 		        $this->IMCake->render($id);
 		    }
-		
+
 		}
 
 ## Requirements
