@@ -8,10 +8,49 @@ To get more familiar with INTER-Mediator visit: http://inter-mediator.info/
 
 This product should be considered a work in progress, please test and use at your own risk and contribute back any changes or fixes you may have.
 
+## Installation
+
+1. Install IMCake.
+
+	cd /path/to/root/app/Plugin
+	git clone git://github.com/matsuo/IMCake.git IMCake
+
+2. Add the following line to /path/to/root/app/Config/bootstrap.php to load this plugin.
+
+	CakePlugin::load('IMCake');
+
+3. Write your model file.
+
+4. Write your view file. (This view file is compatible with a page file of INTER-Mediator.)
+
+5. Add the following line to your controller file to use this plugin, for example.
+
+	public $components = array('IMCake.IMCake');
+
+6. Write the following line in your action method.
+
+	$this->IMCake->render($id);
+
+## Example
+
+		<?php
+		
+		App::uses('AppController', 'Controller');
+		
+		class PeopleController extends AppController
+		{
+		
+		    public $components = array('IMCake.IMCake');
+		
+		    function view($id="") {
+		        $this->IMCake->render($id);
+		    }
+		
+		}
+
 ## Requirements
 
 * CakePHP >= 2.3
-* INTER-Mediator >= 3.3
 * PHP >= 5.3
 
 ## Supported Database
