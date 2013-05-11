@@ -18,14 +18,13 @@ class IMCakeComponent extends Component
     public function __construct(ComponentCollection $collection, $settings = array())
     {
         $this->Controller = $collection->getController();
+        $this->Controller->autoRender = FALSE;
+        $this->Controller->autoLayout = FALSE;
         parent::__construct($collection, $settings);
     }
     
-	public function render($id="")
+    public function render($id="")
     {
-        $this->Controller->autoRender = FALSE;
-		$this->Controller->autoLayout = FALSE;
-        
         $viewClass = $this->Controller->viewClass;
         if ($this->Controller->viewClass != 'View') {
             list($plugin, $viewClass) = pluginSplit($viewClass, TRUE);
@@ -38,6 +37,6 @@ class IMCakeComponent extends Component
         App::import('Helper','IMCake.IMCake');
         $im = new IMCakeHelper($View);
         
-		echo $im->pageConstruct($this->Controller->modelClass, $View->render(), $id);
+        echo $im->pageConstruct($this->Controller->modelClass, $View->render(), $id);
     }
 }

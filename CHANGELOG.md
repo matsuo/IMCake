@@ -2,6 +2,7 @@
 
 ## IMCake 0.1.1-alpha
 
+* Add test cases.
 * Update README.
 
 ## IMCake 0.1.0-alpha
