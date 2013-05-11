@@ -1,0 +1,11 @@
+language: php
+
+php:
+  - 5.3
+  - 5.4
+
+env:
+  - DB=mysql CAKEPHP=2.3.4
+
+script:
+  - ./lib/Cake/Console/cake test IMCake Controller/Component/IMCakeComponent --stderr
