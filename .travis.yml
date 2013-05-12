@@ -50,10 +50,9 @@ before_script:
         </blacklist>
     </filter>
     </phpunit>
-    " > cakephp/phpunit.xml.dist
-  - mv coveralls.json cakephp/composer.json
-  - mv .coveralls.yml cakephp/.coveralls.yml
-  - cd ./cakephp
+    " > ./phpunit.xml.dist
+  - mv ./app/Plugin/IMCake/coveralls.json ./composer.json
+  - mv ./app/Plugin/IMCake/.coveralls.yml ./.coveralls.yml
   - curl -s http://getcomposer.org/installer | php
   - php composer.phar install --dev --no-interaction --prefer-source
   - mkdir -p build/logs
