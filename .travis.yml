@@ -3,9 +3,10 @@ language: php
 php:
   - 5.3
   - 5.4
+  - 5.5
 
 env:
-  - DB=mysql CAKEPHP=2.3.4
+  - DB=mysql CAKEPHP=2.3.5
 
 before_script:
   - sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'CREATE DATABASE cakephp_test;'; fi"
@@ -34,6 +35,31 @@ before_script:
       'encoding' => 'utf8'
     );
     }" > ./app/Config/database.php
+  - echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+    <phpunit bootstrap=\"vendor/autoload.php\">
+    <filter>
+        <blacklist>
+            <directory suffix=\".php\">app/Config</directory>
+            <directory suffix=\".php\">app/Controller</directory>
+            <directory suffix=\".php\">app/Model</directory>
+            <directory suffix=\".php\">app/Test</directory>
+            <directory suffix=\".php\">app/Vendor</directory>
+            <directory suffix=\".php\">app/Plugin/IMCake/Test</directory>
+            <directory suffix=\".php\">lib</directory>
+            <directory suffix=\".php\">vendor</directory>
+        </blacklist>
+    </filter>
+    </phpunit>
+    " > cakephp/phpunit.xml.dist
+  - mv coveralls.json cakephp/composer.json
+  - mv .coveralls.yml cakephp/.coveralls.yml
+  - cd ./cakephp
+  - curl -s http://getcomposer.org/installer | php
+  - php composer.phar install --dev --no-interaction --prefer-source
+  - mkdir -p build/logs
 
 script:
-  - ./lib/Cake/Console/cake test IMCake Controller/Component/IMCakeComponent --stderr
+  - ./lib/Cake/Console/cake test IMCake Controller/Component/IMCakeComponent --stderr --coverage-clover build/logs/clover.xml --configuration phpunit.xml.dist
+
+after_script:
+  - php vendor/bin/coveralls -v
