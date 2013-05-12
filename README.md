@@ -1,4 +1,4 @@
-# IMCake [![Build Status](https://travis-ci.org/matsuo/IMCake.png?branch=master)](https://travis-ci.org/matsuo/IMCake) [![Coverage Status](https://coveralls.io/repos/matsuo/imcake/badge.png?branch=master)](https://coveralls.io/r/matsuo/imcake)
+# IMCake [![Build Status](https://travis-ci.org/matsuo/IMCake.png?branch=master)](https://travis-ci.org/matsuo/IMCake) [![Coverage Status](https://coveralls.io/repos/matsuo/IMCake/badge.png?branch=master)](https://coveralls.io/r/matsuo/IMCake)
 
 IMCake is a plugin for CakePHP to work with INTER-Mediator using models of CakePHP.
 
