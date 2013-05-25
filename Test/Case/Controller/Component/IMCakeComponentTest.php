@@ -17,7 +17,9 @@ App::uses('Controller', 'Controller');
 App::uses('Component', 'Controller');
 App::uses('IMCakeComponent', 'IMCake.Controller/Component');
 
-
+/**
+ * IMCakeComponentTestController class
+ */
 class IMCakeComponentTestController extends Controller {
 
 /**
@@ -29,12 +31,15 @@ class IMCakeComponentTestController extends Controller {
 
 }
 
+/**
+ * IMCakeComponentTest class
+ */
 class IMCakeComponentTest extends CakeTestCase {
 
     public $Controller;
     
 /**
- * start
+ * setUp method
  *
  * @return void
  */

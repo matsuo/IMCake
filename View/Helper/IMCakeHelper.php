@@ -13,8 +13,12 @@
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
-class IMCakeHelper extends AppHelper
-{
+App::uses('AppHelper', 'View/Helper');
+
+/**
+ * IMCakeHelper class
+ */
+class IMCakeHelper extends AppHelper {
     protected $defDivider = '|';
     protected $separator = '@';
     protected $noRecordClassName = "_im_for_noresult_";
@@ -29,8 +33,7 @@ class IMCakeHelper extends AppHelper
     protected $relatedValues = array();
     protected $baseNodes = array();
     
-    public function pageConstruct($modelClass, $body, $id)
-    {
+    public function pageConstruct($modelClass, $body, $id) {
         $this->modelClass = $modelClass;
     
         $ignoreEnclosureRepeaterClassName = "_im_ignore_enc_rep";
@@ -71,11 +74,11 @@ class IMCakeHelper extends AppHelper
                     $curVal = $record[$modelName][0][$fieldName];
                 }
 
-                $parentEnclosure = $this->_getParentEnclosure($currentNode);
-                $parentRepeater = $this->_getParentRepeater($currentNode);
-                $repNodeTag = $this->_repeaterTagFromEncTag($parentEnclosure->tagName);
-                $repeatersOriginal = $this->_collectRepeatersOriginal($parentEnclosure, $repNodeTag);
-                $repeaters = $this->_collectRepeaters($repeatersOriginal);  // Collecting repeaters to this array.
+                $parentEnclosure = $this->getParentEnclosure($currentNode);
+                $parentRepeater = $this->getParentRepeater($currentNode);
+                $repNodeTag = $this->repeaterTagFromEncTag($parentEnclosure->tagName);
+                $repeatersOriginal = $this->collectRepeatersOriginal($parentEnclosure, $repNodeTag);
+                $repeaters = $this->collectRepeaters($repeatersOriginal);  // Collecting repeaters to this array.
                 
                 if (isset($record[$modelName][$fieldName])) {
                     $cloneNodeDataArray[$modelName][0][$fieldName] = $record[$modelName][$fieldName];
@@ -91,7 +94,7 @@ class IMCakeHelper extends AppHelper
 
                 // Set data to the element.
                 $curTarget = 'innerHTML';
-                $this->_setDataToElement($currentNode, $curTarget, $curVal);
+                $this->setDataToElement($currentNode, $curTarget, $curVal);
             }
         }
         
@@ -109,7 +112,7 @@ class IMCakeHelper extends AppHelper
                 $modelName = ucwords($modelArray[0]);
                 
                 if (isset($cloneNodeDataArray[$modelName])) {;
-                    $parentEnclosure = $this->_getParentEnclosure($currentNode);
+                    $parentEnclosure = $this->getParentEnclosure($currentNode);
                     $baseNode = $parentEnclosure->cloneNode(TRUE);
                     foreach ($cloneNodeDataArray[$modelName] as $relatedRecordKey => $relatedRecord) {
                         if ($relatedRecordKey > 0) {
@@ -149,7 +152,7 @@ class IMCakeHelper extends AppHelper
                         if (isset($countArray[$attrValue]) && $countArray[$attrValue] > 0) {
                             $relatedCurVal = $cloneNodeDataArray[$modelName][$countArray[$attrValue]][$fieldName];
                             $curTarget = 'innerHTML';
-                            $this->_setDataToElement($currentNode, $curTarget, $relatedCurVal);
+                            $this->setDataToElement($currentNode, $curTarget, $relatedCurVal);
                         }
                         array_push($settedElements, $attrValue);
                     }
@@ -264,7 +267,7 @@ class IMCakeHelper extends AppHelper
                 // set related values
                 if (count($model->hasAndBelongsToMany) > 0 && !in_array($element->getNodePath(), $this->baseNodes)) {
                     array_push($this->baseNodes, $element->getNodePath());
-                    $parentEnclosure = $this->_getParentEnclosure($element->parentNode);
+                    $parentEnclosure = $this->getParentEnclosure($element->parentNode);
                     if (!is_null($parentEnclosure)) {
                         $xpath = new DOMXPath($parentEnclosure->ownerDocument);
                         foreach ($model->hasAndBelongsToMany as $relatedKey => $relatedValues) {
@@ -320,17 +323,17 @@ class IMCakeHelper extends AppHelper
     /**
      * Seeking nodes and if a node is an enclosure, proceed repeating.
      */
-    protected function _seekEnclosureNode($node, $currentRecord, $currentTable, $parentEnclosure, $objectReference)
+    public function seekEnclosureNode($node, $currentRecord, $currentTable, $parentEnclosure, $objectReference)
     {
         if ($node->nodeType === 1) { // Work for an element
             try {
-                if ($this->_isEnclosure($node, FALSE)) { // Linked element and an enclosure
-                    $this->_expandEnclosure($node, $currentRecord, $currentTable, $parentEnclosure, $objectReference);
+                if ($this->isEnclosure($node, FALSE)) { // Linked element and an enclosure
+                    $this->expandEnclosure($node, $currentRecord, $currentTable, $parentEnclosure, $objectReference);
                 } else {
                     $children = $node->childNodes; // Check all child nodes.
                     for ($i = 0; $i < $children->length; $i++) {
                         if ($children->item($i)->nodeType === 1) {
-                            $this->_seekEnclosureNode($children->item($i), $currentRecord, $currentTable, $parentEnclosure, $objectReference);
+                            $this->seekEnclosureNode($children->item($i), $currentRecord, $currentTable, $parentEnclosure, $objectReference);
                         }
                     }
                 }
@@ -339,15 +342,15 @@ class IMCakeHelper extends AppHelper
         }
     }
     
-    protected function _expandEnclosure($node, $currentRecord, $currentTable, $parentEnclosure, $parentObjectInfo)
+    public function expandEnclosure($node, $currentRecord, $currentTable, $parentEnclosure, $parentObjectInfo)
     {
         $encNodeTag = $node->tagName;
-        $repNodeTag = $this->_repeaterTagFromEncTag($encNodeTag);
-        $repeatersOriginal = $this->_collectRepeatersOriginal($node, $repNodeTag);  // Collecting repeaters to this array.
-        $repeaters = $this->_collectRepeaters($repeatersOriginal);  // Collecting repeaters to this array.
-        list($linkedNodes, $widgetNodes) = $this->_collectLinkedElement($repeaters);
-        $linkDefs = $this->_collectLinkDefinitions($linkedNodes);
-        $voteResult = $this->_tableVoting($linkDefs);
+        $repNodeTag = $this->repeaterTagFromEncTag($encNodeTag);
+        $repeatersOriginal = $this->collectRepeatersOriginal($node, $repNodeTag);  // Collecting repeaters to this array.
+        $repeaters = $this->collectRepeaters($repeatersOriginal);  // Collecting repeaters to this array.
+        list($linkedNodes, $widgetNodes) = $this->collectLinkedElement($repeaters);
+        $linkDefs = $this->collectLinkDefinitions($linkedNodes);
+        $voteResult = $this->tableVoting($linkDefs);
 
         $currentContext = $voteResult['targettable'];
         $fieldList = $voteResult['fieldlist']; // Create field list for database fetch.
@@ -361,8 +364,8 @@ class IMCakeHelper extends AppHelper
             }
         
             $RecordCounter = 0;
-            $repeatersOneRec = $this->_cloneEveryNodes($repeatersOriginal);
-            list($currentLinkedNodes, $currentWidgetNodes) = $this->_collectLinkedElement($repeatersOneRec);
+            $repeatersOneRec = $this->cloneEveryNodes($repeatersOriginal);
+            list($currentLinkedNodes, $currentWidgetNodes) = $this->collectLinkedElement($repeatersOneRec);
             
             for ($i = 0; $i < count($currentLinkedNodes); $i++) {
                 $nodeTag = $currentLinkedNodes[$i]->tagName;
@@ -371,7 +374,7 @@ class IMCakeHelper extends AppHelper
                 // get the tag name of the element
                 $typeAttr = $currentLinkedNodes[$i]->getAttribute('type');
                 // type attribute
-                $linkInfoArray = $this->_getLinkedElementInfo($currentLinkedNodes[$i]);
+                $linkInfoArray = $this->getLinkedElementInfo($currentLinkedNodes[$i]);
 
                 // info array for it  set the name attribute of radio button
                 // should be different for each group
@@ -384,7 +387,7 @@ class IMCakeHelper extends AppHelper
 
             for ($i = 0; $i < count($repeatersOneRec); $i++) {
                 $newNode = $repeatersOneRec[$i]->cloneNode(TRUE);
-                $nodeClass = $this->_getClassAttributeFromNode($newNode);
+                $nodeClass = $this->getClassAttributeFromNode($newNode);
                 if ($nodeClass != $this->noRecordClassName) {
                     $currentModelName = "";
                     foreach ($currentLinkedNodes as $currentLinkedNode) {
@@ -407,7 +410,7 @@ class IMCakeHelper extends AppHelper
                         foreach ($repeatersOneRec[$i]->childNodes as $childNode) {
                             if ($childNode->nodeType == 1) {
                                 try {
-                                    if ($this->_isEnclosure($childNode, FALSE)) { // Linked element and an enclosure
+                                    if ($this->isEnclosure($childNode, FALSE)) { // Linked element and an enclosure
                                     } else {
                                     }
                                 } catch (Exception $e) {
@@ -420,12 +423,12 @@ class IMCakeHelper extends AppHelper
         } else {
             for ($i = 0; $i < count($repeatersOriginal); $i++) {
                 $newNode = $node->appendChild($repeatersOriginal[$i]);
-                $this->_seekEnclosureNode($newNode, NULL, NULL, $node, NULL);
+                $this->seekEnclosureNode($newNode, NULL, NULL, $node, NULL);
             }
         }
     }
     
-    protected function _collectRepeatersOriginal($node, $repNodeTag)
+    public function collectRepeatersOriginal($node, $repNodeTag)
     {
         $repeatersOriginal = array();
 
@@ -440,7 +443,7 @@ class IMCakeHelper extends AppHelper
         return $repeatersOriginal;
     }
 
-    protected function _collectRepeaters($repeatersOriginal)
+    public function collectRepeaters($repeatersOriginal)
     {
         $repeaters = array();
         for ($i = 0; $i < count($repeatersOriginal); $i++) {
@@ -452,21 +455,21 @@ class IMCakeHelper extends AppHelper
         return $repeaters;
     }
 
-    protected function _collectLinkedElement($repeaters)
+    public function collectLinkedElement($repeaters)
     {
         for ($i = 0; $i < count($repeaters); $i++) {
-            $this->_seekLinkedElement($repeaters[$i]);
+            $this->seekLinkedElement($repeaters[$i]);
         }
         
         return array($this->linkedNodesCollection, $this->widgetNodesCollection);
     }
 
-    protected function _seekLinkedElement($node)
+    public function seekLinkedElement($node)
     {
         $nType = $node->nodeType;
         if ($nType === 1) {
-            if ($this->_isLinkedElement($node)) {
-                $currentEnclosure = $this->_getEnclosure($node);
+            if ($this->isLinkedElement($node)) {
+                $currentEnclosure = $this->getEnclosure($node);
                 if ($currentEnclosure === NULL) {
                     array_push($this->linkedNodesCollection, $node);
                 } else {
@@ -475,17 +478,17 @@ class IMCakeHelper extends AppHelper
             }
             $children = $node->childNodes;
             for ($i = 0; $i < $children->length; $i++) {
-                $detectedEnclosure = $this->_seekLinkedElement($children->item($i));
+                $detectedEnclosure = $this->seekLinkedElement($children->item($i));
             }
         }
         return NULL;
     }
     
-    protected function _collectLinkDefinitions($linkedNodes)
+    public function collectLinkDefinitions($linkedNodes)
     {
         $linkDefs = array();
         for ($j = 0; $j < count($linkedNodes); $j++) {
-            $nodeDefs = $this->_getLinkedElementInfo($linkedNodes[$j]);
+            $nodeDefs = $this->getLinkedElementInfo($linkedNodes[$j]);
             if ($nodeDefs !== NULL) {
                 for ($k = 0; $k < count($nodeDefs); $k++) {
                     array_push($linkDefs, $nodeDefs[$k]);
@@ -495,14 +498,14 @@ class IMCakeHelper extends AppHelper
         return $linkDefs;
     }
 
-    protected function _tableVoting($linkDefs)
+    public function tableVoting($linkDefs)
     {
         $tableName = '';
         $tableVote = array();    // Containing editable elements or not.
         $fieldList = array();    // Create field list for database fetch.
 
         for ($j = 0; $j < count($linkDefs); $j++) {
-            $nodeInfoArray = $this->_getNodeInfoArray($linkDefs[$j]);
+            $nodeInfoArray = $this->getNodeInfoArray($linkDefs[$j]);
             $nodeInfoField = $nodeInfoArray['field'];
             $nodeInfoTable = $nodeInfoArray['table'];
             if ($nodeInfoField != NULL && $nodeInfoTable != NULL && mb_strlen($nodeInfoField) != 0 && mb_strlen($nodeInfoTable) != 0) {
@@ -533,11 +536,11 @@ class IMCakeHelper extends AppHelper
         return array('targettable' => $context, 'fieldlist' => isset($fieldList[$maxTableName]) ? $fieldList[$maxTableName] : array());
     }
     
-    protected function _getParentRepeater($node)
+    public function getParentRepeater($node)
     {
         $currentNode = $node;
         while ($currentNode != NULL) {
-            if ($this->_isRepeater($currentNode, TRUE)) {
+            if ($this->isRepeater($currentNode, TRUE)) {
                 return $currentNode;
             }
             $currentNode = $currentNode->parentNode;
@@ -545,11 +548,11 @@ class IMCakeHelper extends AppHelper
         return NULL;
     }
     
-    protected function _getParentEnclosure($node)
+    public function getParentEnclosure($node)
     {
         $currentNode = $node;
         while ($currentNode != NULL) {
-            if ($this->_isEnclosure($currentNode, TRUE)) {
+            if ($this->isEnclosure($currentNode, TRUE)) {
                 return $currentNode;
             }
             $currentNode = $currentNode->parentNode;
@@ -558,7 +561,7 @@ class IMCakeHelper extends AppHelper
         return NULL;
     }
     
-    protected function _isEnclosure($node, $nodeOnly)
+    public function isEnclosure($node, $nodeOnly)
     {
         $ignoreEnclosureRepeaterClassName = "_im_ignore_enc_rep";
         $rollingRepeaterClassName = "_im_repeater";
@@ -567,7 +570,7 @@ class IMCakeHelper extends AppHelper
             return FALSE;
         }
         $tagName = $node->tagName;
-        $className = $this->_getClassAttributeFromNode($node);
+        $className = $this->getClassAttributeFromNode($node);
         
         if (in_array($tagName, array("tbody", "ul", "ol", "select", "div", "span"))) {
             if ($nodeOnly) {
@@ -575,7 +578,7 @@ class IMCakeHelper extends AppHelper
             } else {
                 $children = $node->childNodes;
                 for ($k = 0; $k < $children->length; $k++) {
-                    if ($this->_isRepeater($children->item($k), TRUE)) {
+                    if ($this->isRepeater($children->item($k), TRUE)) {
                         return TRUE;
                     }
                 }
@@ -585,36 +588,36 @@ class IMCakeHelper extends AppHelper
         return FALSE;
     }
     
-    protected function _isRepeater($node, $nodeOnly)
+    public function isRepeater($node, $nodeOnly)
     {
         if (!$node || $node->nodeType !== 1) {
             return FALSE;
         }
         $tagName = $node->tagName;
-        $className = $this->_getClassAttributeFromNode($node);
+        $className = $this->getClassAttributeFromNode($node);
 
         if (in_array($tagName, array("tr", "li", "option", "div", "span"))) {
             if ($nodeOnly) {
                 return TRUE;
             } else {
-                return $this->_searchLinkedElement($node);
+                return $this->searchLinkedElement($node);
             }
         }
         
         return FALSE;
     }
     
-    protected function _searchLinkedElement($node)
+    public function searchLinkedElement($node)
     {
-        if ($this->_isLinkedElement($node)) {
+        if ($this->isLinkedElement($node)) {
             return TRUE;
         }
         $children = $node->childNodes;
         for ($k = 0; $k < $children->length; $k++) {
             if ($children->item($k)->nodeType === 1) { // Work for an element
-                if ($this->_isLinkedElement($children->item($k))) {
+                if ($this->isLinkedElement($children->item($k))) {
                     return TRUE;
-                } else if ($this->_searchLinkedElement($children->item($k))) {
+                } else if ($this->searchLinkedElement($children->item($k))) {
                     return TRUE;
                 }
             }
@@ -623,7 +626,7 @@ class IMCakeHelper extends AppHelper
         return FALSE;
     }
     
-    protected function _isLinkedElement($node)
+    public function isLinkedElement($node)
     {
         if ($node != NULL) {
             if ($this->titleAsLinkInfo) {
@@ -632,7 +635,7 @@ class IMCakeHelper extends AppHelper
                 }
             }
             if ($this->classAsLinkInfo) {
-                $classInfo = $this->_getClassAttributeFromNode($node);
+                $classInfo = $this->getClassAttributeFromNode($node);
                 if ($classInfo != NULL) {
                     if (preg_match('/IM\[.*\]/', $classInfo, $matches)) {
                         return TRUE;
@@ -644,15 +647,15 @@ class IMCakeHelper extends AppHelper
         return FALSE;
     }
     
-    protected function _getEnclosure($node)
+    public function getEnclosure($node)
     {
         $detectedRepeater = NULL;
         
         $currentNode = $node;
         while ($currentNode != NULL) {
-            if ($this->_isRepeater($currentNode, TRUE)) {
+            if ($this->isRepeater($currentNode, TRUE)) {
                 $detectedRepeater = $currentNode;
-            } else if ($this->_isRepeaterOfEnclosure($detectedRepeater, $currentNode)) {
+            } else if ($this->isRepeaterOfEnclosure($detectedRepeater, $currentNode)) {
                 $detectedRepeater = NULL;
                 return $currentNode;
             }
@@ -665,7 +668,7 @@ class IMCakeHelper extends AppHelper
     /**
      * Check the pair of nodes in argument is valid for repater/enclosure.
      */
-    protected function _isRepeaterOfEnclosure($repeater, $enclosure)
+    public function isRepeaterOfEnclosure($repeater, $enclosure)
     {
         if (!$repeater || !$enclosure) {
             return FALSE;
@@ -679,9 +682,9 @@ class IMCakeHelper extends AppHelper
             return TRUE;
         }
         if (($enclosureTag === 'div' || $enclosureTag === 'span')) {
-            $enclosureClass = $this->_getClassAttributeFromNode($enclosure);
+            $enclosureClass = $this->getClassAttributeFromNode($enclosure);
             if ($enclosureClass && strpos($enclosureClass, '_im_enclosure') >= 0) {
-                $repeaterClass = $this->_getClassAttributeFromNode($repeater);
+                $repeaterClass = $this->getClassAttributeFromNode($repeater);
                 if (($repeaterTag === 'div' || $repeaterTag === 'span') && $repeaterClass != NULL && strpos($repeaterClass, '_im_repeater') >= 0) {
                     return TRUE;
                 } else if ($repeaterTag === 'input') {
@@ -697,25 +700,25 @@ class IMCakeHelper extends AppHelper
         return FALSE;
     }
     
-    protected function _getLinkedElementInfo($node)
+    public function getLinkedElementInfo($node)
     {
         $defs = array();
-        if ($this->_isLinkedElement($node)) {
+        if ($this->isLinkedElement($node)) {
             if ($this->titleAsLinkInfo) {
                 if ($node->getAttribute('title') != NULL) {
                     $eachDefs = explode($this->defDivider, $node->getAttribute('title'));
                     for ($i = 0; $i < count($eachDefs); $i++) {
-                        array_push($defs, $this->_resolveAlias($eachDefs[$i]));
+                        array_push($defs, $this->resolveAlias($eachDefs[$i]));
                     }
                 }
             }
             if ($this->classAsLinkInfo) {
-                $classAttr = $this->_getClassAttributeFromNode($node);
+                $classAttr = $this->getClassAttributeFromNode($node);
                 if ($classAttr !== NULL && count($classAttr) > 0) {
                     if (preg_match('/IM\[([^\]]*)\]/', $classAttr, $matched)) {
                         $eachDefs = explode($this->defDivider, $matched[1]);
                         for ($i = 0; $i < count($eachDefs); $i++) {
-                            array_push($defs, $this->_resolveAlias($eachDefs[$i]));
+                            array_push($defs, $this->resolveAlias($eachDefs[$i]));
                         }
                     }
                 }
@@ -727,12 +730,12 @@ class IMCakeHelper extends AppHelper
         return FALSE;
     }
     
-    protected function _resolveAlias($def)
+    public function resolveAlias($def)
     {
         return $def;
     }
     
-    protected function _repeaterTagFromEncTag($tag)
+    public function repeaterTagFromEncTag($tag)
     {
         if ($tag == 'tbody') {
             return 'tr';
@@ -751,7 +754,7 @@ class IMCakeHelper extends AppHelper
         return NULL;
     }
     
-    protected function _getNodeInfoArray($nodeInfo)
+    public function getNodeInfoArray($nodeInfo)
     {
         if (is_array($nodeInfo)) {
             $comps = $nodeInfo;
@@ -781,7 +784,7 @@ class IMCakeHelper extends AppHelper
         );
     }
     
-    protected function _getClassAttributeFromNode($node)
+    public function getClassAttributeFromNode($node)
     {
         $str = '';
         if ($node == NULL) {
@@ -792,7 +795,7 @@ class IMCakeHelper extends AppHelper
         return $str;
     }
     
-    protected function _cloneEveryNodes($originalNodes)
+    public function cloneEveryNodes($originalNodes)
     {
         $clonedNodes = array();
         for ($i = 0; $i < count($originalNodes); $i++) {
@@ -803,7 +806,7 @@ class IMCakeHelper extends AppHelper
         return $clonedNodes;
     }
     
-    protected function _setDataToElement($element, $curTarget, $curVal)
+    public function setDataToElement($element, $curTarget, $curVal)
     {
         $needPostValueSet = FALSE;
         
@@ -824,7 +827,7 @@ class IMCakeHelper extends AppHelper
             $optionTags = $element->getElementsByTagName("option");
             $hasCurVal = FALSE;
             foreach ($optionTags as $optionTag) {
-                $nodeDefs = $this->_getLinkedElementInfo($optionTag);
+                $nodeDefs = $this->getLinkedElementInfo($optionTag);
                 $this->partialConstruct($element, $nodeDefs, $curVal);
                 
                 if ($optionTag->getAttribute("value") == $curVal) {
