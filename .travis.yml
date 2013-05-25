@@ -59,7 +59,7 @@ before_script:
   - mkdir -p build/logs
 
 script:
-  - ./lib/Cake/Console/cake test IMCake Controller/Component/IMCakeComponent --stderr --coverage-clover build/logs/clover.xml --configuration phpunit.xml.dist
+  - ./lib/Cake/Console/cake test IMCake Controller/Component/IMCakeComponent View/Helper/IMCakeHelper --stderr --coverage-clover build/logs/clover.xml --configuration phpunit.xml.dist
 
 after_script:
   - php vendor/bin/coveralls -v
