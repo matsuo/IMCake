@@ -75,6 +75,9 @@ class IMCakeHelperTest extends CakeTestCase {
  * test collectRepeaters()
  */
     public function testCollectRepeaters() {
+        $IMCake = new IMCakeHelper($this->View);
+        
+        $this->assertEquals($IMCake->collectRepeaters(array()), array());
     }
 
 /**
@@ -93,6 +96,9 @@ class IMCakeHelperTest extends CakeTestCase {
  * test collectLinkDefinitions()
  */
     public function testCollectLinkDefinitions() {
+        $IMCake = new IMCakeHelper($this->View);
+        
+        $this->assertEquals($IMCake->collectLinkDefinitions(array()), array());
     }
 
 /**
@@ -105,24 +111,55 @@ class IMCakeHelperTest extends CakeTestCase {
  * test getParentRepeater()
  */
     public function testGetParentRepeater() {
+        $IMCake = new IMCakeHelper($this->View);
+        
+        $this->assertNull($IMCake->getParentRepeater(NULL));
     }
 
 /**
  * test getParentEnclosure()
  */
     public function testGetParentEnclosure() {
+        $IMCake = new IMCakeHelper($this->View);
+        
+        $this->assertNull($IMCake->getParentEnclosure(NULL));
     }
 
 /**
  * test isEnclosure()
  */
     public function testIsEnclosure() {
+        $IMCake = new IMCakeHelper($this->View);
+        
+        $this->assertFalse($IMCake->isEnclosure(NULL, TRUE));
     }
 
 /**
  * test isRepeater()
  */
     public function testIsRepeater() {
+        $IMCake = new IMCakeHelper($this->View);
+        
+        $this->assertFalse($IMCake->isRepeater(NULL, TRUE));
+        
+        $dom = new DOMDocument();
+        $element = $dom->createElement('tr');
+        $this->assertTrue($IMCake->isRepeater($element, TRUE));
+        
+        $element = $dom->createElement('li');
+        $this->assertTrue($IMCake->isRepeater($element, TRUE));
+
+        $element = $dom->createElement('option');
+        $this->assertTrue($IMCake->isRepeater($element, TRUE));
+
+        $element = $dom->createElement('div');
+        $this->assertTrue($IMCake->isRepeater($element, TRUE));
+
+        $element = $dom->createElement('span');
+        $this->assertTrue($IMCake->isRepeater($element, TRUE));
+
+        $element = $dom->createElement('table');
+        $this->assertFalse($IMCake->isRepeater($element, TRUE));
     }
 
 /**
@@ -135,12 +172,18 @@ class IMCakeHelperTest extends CakeTestCase {
  * test isLinkedElement()
  */
     public function testIsLinkedElement() {
+        $IMCake = new IMCakeHelper($this->View);
+        
+        $this->assertFalse($IMCake->isLinkedElement(NULL));
     }
 
 /**
  * test getEnclosure()
  */
     public function testGetEnclosure() {
+        $IMCake = new IMCakeHelper($this->View);
+        
+        $this->assertNull($IMCake->getEnclosure(NULL));
     }
 
 /**
@@ -217,6 +260,9 @@ class IMCakeHelperTest extends CakeTestCase {
  * test getLinkedElementInfo()
  */
     public function testGetLinkedElementInfo() {
+        $IMCake = new IMCakeHelper($this->View);
+        
+        $this->assertFalse($IMCake->getLinkedElementInfo(NULL));
     }
 
 /**
@@ -237,7 +283,7 @@ class IMCakeHelperTest extends CakeTestCase {
         $this->assertEquals($IMCake->repeaterTagFromEncTag('ol'), 'li');
         $this->assertEquals($IMCake->repeaterTagFromEncTag('div'), 'div');
         $this->assertEquals($IMCake->repeaterTagFromEncTag('span'), 'span');
-        $this->assertNULL($IMCake->repeaterTagFromEncTag(NULL));
+        $this->assertNull($IMCake->repeaterTagFromEncTag(NULL));
     }
 
 /**
@@ -289,6 +335,9 @@ class IMCakeHelperTest extends CakeTestCase {
  * test cloneEveryNodes()
  */
     public function testCloneEveryNodes() {
+        $IMCake = new IMCakeHelper($this->View);
+        
+        $this->assertEquals($IMCake->cloneEveryNodes(array()), array());
     }
 
 /**
