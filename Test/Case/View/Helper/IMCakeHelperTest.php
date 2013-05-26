@@ -147,6 +147,70 @@ class IMCakeHelperTest extends CakeTestCase {
  * test isRepeaterOfEnclosure()
  */
     public function testIsRepeaterOfEnclosure() {
+        $IMCake = new IMCakeHelper($this->View);
+        
+        $this->assertFalse($IMCake->isRepeaterOfEnclosure(NULL, NULL));
+        
+        $dom = new DOMDocument();
+        $repeaterElement = $dom->createElement('tr');
+        $enclosureElement = $dom->createElement('tbody');
+        $this->assertTrue($IMCake->isRepeaterOfEnclosure($repeaterElement, $enclosureElement));
+
+        $repeaterElement = $dom->createElement('option');
+        $enclosureElement = $dom->createElement('select');
+        $this->assertTrue($IMCake->isRepeaterOfEnclosure($repeaterElement, $enclosureElement));
+
+        $repeaterElement = $dom->createElement('li');
+        $enclosureElement = $dom->createElement('ol');
+        $this->assertTrue($IMCake->isRepeaterOfEnclosure($repeaterElement, $enclosureElement));
+
+        $repeaterElement = $dom->createElement('li');
+        $enclosureElement = $dom->createElement('ul');
+        $this->assertTrue($IMCake->isRepeaterOfEnclosure($repeaterElement, $enclosureElement));
+
+        $repeaterElement = $dom->createElement('div');
+        $repeaterElement->setAttribute('class', '_im_repeater');
+        $enclosureElement = $dom->createElement('div');
+        $enclosureElement->setAttribute('class', '_im_enclosure');
+        $this->assertTrue($IMCake->isRepeaterOfEnclosure($repeaterElement, $enclosureElement));
+
+        $repeaterElement = $dom->createElement('div');
+        $repeaterElement->setAttribute('class', '_im_repeater');
+        $enclosureElement = $dom->createElement('span');
+        $enclosureElement->setAttribute('class', '_im_enclosure');
+        $this->assertTrue($IMCake->isRepeaterOfEnclosure($repeaterElement, $enclosureElement));
+        
+        $repeaterElement = $dom->createElement('span');
+        $repeaterElement->setAttribute('class', '_im_repeater');
+        $enclosureElement = $dom->createElement('div');
+        $enclosureElement->setAttribute('class', '_im_enclosure');
+        $this->assertTrue($IMCake->isRepeaterOfEnclosure($repeaterElement, $enclosureElement));
+        
+        $repeaterElement = $dom->createElement('span');
+        $repeaterElement->setAttribute('class', '_im_repeater');
+        $enclosureElement = $dom->createElement('span');
+        $enclosureElement->setAttribute('class', '_im_enclosure');
+        $this->assertTrue($IMCake->isRepeaterOfEnclosure($repeaterElement, $enclosureElement));
+
+        $repeaterElement = $dom->createElement('input');
+        $repeaterElement->setAttribute('type', 'radio');
+        $repeaterElement->setAttribute('class', '_im_repeater');
+        $enclosureElement = $dom->createElement('div');
+        $enclosureElement->setAttribute('class', '_im_enclosure');
+        $this->assertTrue($IMCake->isRepeaterOfEnclosure($repeaterElement, $enclosureElement));
+
+        $repeaterElement = $dom->createElement('input');
+        $repeaterElement->setAttribute('type', 'check');
+        $repeaterElement->setAttribute('class', '_im_repeater');
+        $enclosureElement = $dom->createElement('div');
+        $enclosureElement->setAttribute('class', '_im_enclosure');
+        $this->assertTrue($IMCake->isRepeaterOfEnclosure($repeaterElement, $enclosureElement));
+
+        $repeaterElement = $dom->createElement('input');
+        $repeaterElement->setAttribute('class', '_im_repeater');
+        $enclosureElement = $dom->createElement('div');
+        $enclosureElement->setAttribute('class', '_im_enclosure');
+        $this->assertFalse($IMCake->isRepeaterOfEnclosure($repeaterElement, $enclosureElement));
     }
 
 /**
@@ -166,6 +230,7 @@ class IMCakeHelperTest extends CakeTestCase {
  */
     public function testRepeaterTagFromEncTag() {
         $IMCake = new IMCakeHelper($this->View);
+        
         $this->assertEquals($IMCake->repeaterTagFromEncTag('tbody'), 'tr');
         $this->assertEquals($IMCake->repeaterTagFromEncTag('select'), 'option');
         $this->assertEquals($IMCake->repeaterTagFromEncTag('ul'), 'li');
@@ -179,6 +244,31 @@ class IMCakeHelperTest extends CakeTestCase {
  * test getNodeInfoArray()
  */
     public function testGetNodeInfoArray() {
+        $IMCake = new IMCakeHelper($this->View);
+        
+        $nodeInfo = array('0' => 'fieldName');
+        $this->assertInternalType('array', $IMCake->getNodeInfoArray($nodeInfo));
+        $this->assertEquals($IMCake->getNodeInfoArray($nodeInfo), array('table' => '', 'field' => 'fieldName', 'target' => ''));
+        
+        $nodeInfo = array('0' => 'tableName', '1' => 'fieldName');
+        $this->assertInternalType('array', $IMCake->getNodeInfoArray($nodeInfo));
+        $this->assertEquals($IMCake->getNodeInfoArray($nodeInfo), array('table' => 'tableName', 'field' => 'fieldName', 'target' => ''));
+        
+        $nodeInfo = array('0' => 'tableName', '1' => 'fieldName', '2' => 'targetName');
+        $this->assertInternalType('array', $IMCake->getNodeInfoArray($nodeInfo));
+        $this->assertEquals($IMCake->getNodeInfoArray($nodeInfo), array('table' => 'tableName', 'field' => 'fieldName', 'target' => 'targetName'));
+
+        $nodeInfo = 'fieldName';
+        $this->assertInternalType('array', $IMCake->getNodeInfoArray($nodeInfo));
+        $this->assertEquals($IMCake->getNodeInfoArray($nodeInfo), array('table' => '', 'field' => 'fieldName', 'target' => ''));
+
+        $nodeInfo = 'tableName@fieldName';
+        $this->assertInternalType('array', $IMCake->getNodeInfoArray($nodeInfo));
+        $this->assertEquals($IMCake->getNodeInfoArray($nodeInfo), array('table' => 'tableName', 'field' => 'fieldName', 'target' => ''));
+
+        $nodeInfo = 'tableName@fieldName@targetName';
+        $this->assertInternalType('array', $IMCake->getNodeInfoArray($nodeInfo));
+        $this->assertEquals($IMCake->getNodeInfoArray($nodeInfo), array('table' => 'tableName', 'field' => 'fieldName', 'target' => 'targetName'));
     }
 
 /**
@@ -186,7 +276,13 @@ class IMCakeHelperTest extends CakeTestCase {
  */
     public function testGetClassAttributeFromNode() {
         $IMCake = new IMCakeHelper($this->View);
+        
         $this->assertEquals($IMCake->getClassAttributeFromNode(NULL), '');
+        
+        $dom = new DOMDocument();
+        $element = $dom->createElement('div');
+        $element->setAttribute('class', 'testclass');
+        $this->assertEquals($IMCake->getClassAttributeFromNode($element), 'testclass');
     }
 
 /**
