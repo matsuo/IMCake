@@ -175,6 +175,19 @@ class IMCakeHelperTest extends CakeTestCase {
         $IMCake = new IMCakeHelper($this->View);
         
         $this->assertFalse($IMCake->isLinkedElement(NULL));
+        
+        $dom = new DOMDocument();
+        $element = $dom->createElement('div');
+        $element->setAttribute('title', 'testtitle');
+        $this->assertTrue($IMCake->isLinkedElement($element));
+
+        $element = $dom->createElement('div');
+        $element->setAttribute('class', 'IM[testfield]');
+        $this->assertTrue($IMCake->isLinkedElement($element));
+
+        $element = $dom->createElement('div');
+        $element->setAttribute('class', 'testclass');
+        $this->assertFalse($IMCake->isLinkedElement($element));
     }
 
 /**
@@ -344,6 +357,58 @@ class IMCakeHelperTest extends CakeTestCase {
  * test setDataToElement()
  */
     public function testSetDataToElement() {
+        $IMCake = new IMCakeHelper($this->View);
+        
+        $dom = new DOMDocument();
+        $element = $dom->createElement('input');
+        $element->setAttribute('type', 'checkbox');
+        $element->setAttribute('value', 'testvalue');
+        $IMCake->setDataToElement($element, 'innerHTML', 'testvalue');
+        $this->assertEquals($element->getAttribute('checked'), 'checked');
+
+        $element = $dom->createElement('input');
+        $element->setAttribute('type', 'radio');
+        $element->setAttribute('value', 'testvalue');
+        $IMCake->setDataToElement($element, 'innerHTML', 'testvalue');
+        $this->assertEquals($element->getAttribute('checked'), 'checked');
+        
+        $element = $dom->createElement('input');
+        $element->setAttribute('type', 'checkbox');
+        $element->setAttribute('value', 'testvalue');
+        $IMCake->setDataToElement($element, 'innerHTML', 'testvalue2');
+        $this->assertEquals($element->getAttribute('checked'), '');
+
+        $element = $dom->createElement('input');
+        $element->setAttribute('type', 'radio');
+        $element->setAttribute('value', 'testvalue');
+        $IMCake->setDataToElement($element, 'innerHTML', 'testvalue2');
+        $this->assertEquals($element->getAttribute('checked'), '');
+
+        $element = $dom->createElement('input');
+        $element->setAttribute('type', 'text');
+        $element->setAttribute('value', 'testvalue');
+        $IMCake->setDataToElement($element, 'innerHTML', 'testvalue');
+        $this->assertEquals($element->getAttribute('value'), 'testvalue');
+
+        $element = $dom->createElement('input');
+        $element->setAttribute('type', 'password');
+        $element->setAttribute('value', 'testvalue');
+        $IMCake->setDataToElement($element, 'innerHTML', 'testvalue');
+        $this->assertEquals($element->getAttribute('value'), 'testvalue');
+
+        $element = $dom->createElement('input');
+        $element->setAttribute('type', 'hidden');
+        $element->setAttribute('value', 'testvalue');
+        $IMCake->setDataToElement($element, 'innerHTML', 'testvalue');
+        $this->assertEquals($element->getAttribute('value'), 'testvalue');
+
+        $element = $dom->createElement('textarea');
+        $IMCake->setDataToElement($element, 'innerHTML', '');
+        $this->assertEquals($element->childNodes->item(0)->nodeValue, '');
+
+        $element = $dom->createElement('textarea');
+        $IMCake->setDataToElement($element, 'innerHTML', 'testvalue');
+        $this->assertEquals($element->childNodes->item(0)->nodeValue, 'testvalue');
     }
 
 }
