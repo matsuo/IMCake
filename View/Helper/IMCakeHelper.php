@@ -813,7 +813,7 @@ class IMCakeHelper extends AppHelper {
                     $hasCurVal = TRUE;
                 }
             }
-            if ($hasCurVal === FALSE) {
+            if ($hasCurVal === FALSE && $element->childNodes->length > 0) {
                 $cloneNode = $element->childNodes->item(1)->cloneNode(TRUE);
                 $cloneNode->setAttribute("value", "");
                 $cloneNode->setAttribute("selected", "selected");

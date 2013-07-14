@@ -405,6 +405,12 @@ class IMCakeHelperTest extends CakeTestCase {
         $IMCake->setDataToElement($element, 'innerHTML', 'testvalue');
         $this->assertEquals($element->getAttribute('value'), 'testvalue');
 
+        $element = $dom->createElement('select');
+        $element->setAttribute('type', 'hidden');
+        $element->setAttribute('value', 'testvalue');
+        $IMCake->setDataToElement($element, 'innerHTML', 'testvalue');
+        $this->assertEquals($element->getAttribute('value'), 'testvalue');
+
         $element = $dom->createElement('textarea');
         $IMCake->setDataToElement($element, 'innerHTML', '');
         $this->assertEquals($element->childNodes->item(0)->nodeValue, '');
