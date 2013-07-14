@@ -166,6 +166,9 @@ class IMCakeHelperTest extends CakeTestCase {
  * test searchLinkedElement()
  */
     public function testSearchLinkedElement() {
+        $IMCake = new IMCakeHelper($this->View);
+        
+        $this->assertFalse($IMCake->searchLinkedElement(NULL));
     }
 
 /**

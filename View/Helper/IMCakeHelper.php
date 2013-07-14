@@ -598,13 +598,15 @@ class IMCakeHelper extends AppHelper {
         if ($this->isLinkedElement($node)) {
             return TRUE;
         }
-        $children = $node->childNodes;
-        for ($k = 0; $k < $children->length; $k++) {
-            if ($children->item($k)->nodeType === 1) { // Work for an element
-                if ($this->isLinkedElement($children->item($k))) {
-                    return TRUE;
-                } else if ($this->searchLinkedElement($children->item($k))) {
-                    return TRUE;
+        if ($node != NULL) {
+            $children = $node->childNodes;
+            for ($k = 0; $k < $children->length; $k++) {
+                if ($children->item($k)->nodeType === 1) { // Work for an element
+                    if ($this->isLinkedElement($children->item($k))) {
+                        return TRUE;
+                    } else if ($this->searchLinkedElement($children->item($k))) {
+                        return TRUE;
+                    }
                 }
             }
         }
