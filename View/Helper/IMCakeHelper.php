@@ -777,9 +777,12 @@ class IMCakeHelper extends AppHelper {
     
     public function cloneEveryNodes($originalNodes) {
         $clonedNodes = array();
-        for ($i = 0; $i < count($originalNodes); $i++) {
-            $clonedNode = $originalNodes[$i]->cloneNode(true);
-            array_push($clonedNodes, $clonedNode);
+        
+        if (is_array($originalNodes)) {
+            for ($i = 0; $i < count($originalNodes); $i++) {
+                $clonedNode = $originalNodes[$i]->cloneNode(true);
+                array_push($clonedNodes, $clonedNode);
+            }
         }
         
         return $clonedNodes;

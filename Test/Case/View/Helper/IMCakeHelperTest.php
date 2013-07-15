@@ -354,6 +354,10 @@ class IMCakeHelperTest extends CakeTestCase {
         $IMCake = new IMCakeHelper($this->View);
         
         $this->assertEquals($IMCake->cloneEveryNodes(array()), array());
+        
+        $dom = new DOMDocument();
+        $element = $dom->createElement('option');
+        $this->assertEquals($IMCake->cloneEveryNodes($element), array());
     }
 
 /**
@@ -406,10 +410,16 @@ class IMCakeHelperTest extends CakeTestCase {
         $this->assertEquals($element->getAttribute('value'), 'testvalue');
 
         $element = $dom->createElement('select');
-        $element->setAttribute('type', 'hidden');
-        $element->setAttribute('value', 'testvalue');
-        $IMCake->setDataToElement($element, 'innerHTML', 'testvalue');
-        $this->assertEquals($element->getAttribute('value'), 'testvalue');
+        $element->setAttribute('class', 'testclass');
+        $this->assertTrue($IMCake->setDataToElement($element, 'innerHTML', ''));
+
+        $element = $dom->createElement('select');
+        $element->setAttribute('class', 'testclass');
+        $childNode = $dom->createElement('option');
+        $childNode->setAttribute('value', 'testvalue1');
+        $element->appendChild($childNode);
+        $IMCake->setDataToElement($element, 'innerHTML', 'testvalue1');
+        $this->assertEquals($element->childNodes->item(0)->getAttribute('selected'), 'selected');
 
         $element = $dom->createElement('textarea');
         $IMCake->setDataToElement($element, 'innerHTML', '');
