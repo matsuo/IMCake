@@ -16,6 +16,12 @@
 class IMCakeComponent extends Component
 {
 
+    public function __construct(ComponentCollection $collection, $settings = array())
+    {
+        $this->Controller = $collection->getController();
+        parent::__construct($collection, $settings);
+    }
+
     public function render($id="")
     {
         $viewClass = $this->Controller->viewClass;
