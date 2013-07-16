@@ -15,14 +15,7 @@
 
 class IMCakeComponent extends Component
 {
-    public function __construct(ComponentCollection $collection, $settings = array())
-    {
-        $this->Controller = $collection->getController();
-        $this->Controller->autoRender = FALSE;
-        $this->Controller->autoLayout = FALSE;
-        parent::__construct($collection, $settings);
-    }
-    
+
     public function render($id="")
     {
         $viewClass = $this->Controller->viewClass;
@@ -39,4 +32,5 @@ class IMCakeComponent extends Component
         
         echo $im->pageConstruct($this->Controller->modelClass, $View->render(), $id);
     }
+
 }

@@ -49,13 +49,5 @@ class IMCakeComponentTest extends CakeTestCase {
         $this->Controller->constructClasses();
         $this->IMCake = $this->Controller->IMCake;
     }
-    
-/**
- * test properties
- */
-    public function testProperties() {
-        $this->assertFalse($this->Controller->autoRender);
-        $this->assertFalse($this->Controller->autoLayout);
-    }
 
 }

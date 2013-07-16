@@ -45,7 +45,9 @@ This product should be considered a work in progress, please test and use at you
 		    public $components = array('IMCake.IMCake');
 
 		    function view($id="") {
-		        $this->IMCake->render($id);
+		        $this->autoLayout = false;
+				$this->autoRender = false;
+				$this->IMCake->render($id);
 		    }
 
 		}
