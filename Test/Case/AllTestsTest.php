@@ -29,7 +29,6 @@ class AllTests extends PHPUnit_Framework_TestSuite {
         
         $basePath = App::pluginPath('IMCake') . 'Test' . DS . 'Case' . DS;
         
-        $suite->addTestFile($basePath . 'Controller' . DS . 'Component' . DS . 'IMCakeComponentTest.php');
         $suite->addTestFile($basePath . 'View' . DS . 'Helper' . DS . 'IMCakeHelperTest.php');
         return $suite;
     }
