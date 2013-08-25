@@ -44,7 +44,7 @@ class IMCakeHelper extends AppHelper {
         $record = $model->find("first", array('conditions' => array($modelClass . '.' . $model->primaryKey => $id), 'recursive' => 1));
         
         $doc = new DOMDocument();
-        $doc->loadXML($body);
+        $doc->loadHTML($body);
         $xpath = new DOMXPath($doc);
         
         $bodyNodes = $doc->getElementsByTagName('body');

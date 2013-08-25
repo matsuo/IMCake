@@ -1,5 +1,10 @@
 # Changelog
 
+## IMCake 0.1.2-alpha (under development)
+
+* Fix a bug when loading HTML.
+
+
 ## IMCake 0.1.1-alpha
 
 * Fix rendering in case of not using IMCake.
