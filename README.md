@@ -1,8 +1,8 @@
-# IMCake [![Build Status](https://travis-ci.org/matsuo/IMCake.png?branch=master)](https://travis-ci.org/matsuo/IMCake) [![Coverage Status](https://coveralls.io/repos/matsuo/IMCake/badge.png?branch=master)](https://coveralls.io/r/matsuo/IMCake)
+# IMCake [![Build Status](https://travis-ci.org/matsuo/IMCake.png?branch=master)](https://travis-ci.org/matsuo/IMCake) [![Coverage Status](https://coveralls.io/repos/matsuo/IMCake/badge.png?branch=master)](https://coveralls.io/r/matsuo/IMCake) [![Code Climate](https://codeclimate.com/github/matsuo/IMCake/badges/gpa.svg)](https://codeclimate.com/github/matsuo/IMCake)
 
-IMCake is a plugin for CakePHP to work with INTER-Mediator using models of CakePHP.
+IMCake is a plugin for CakePHP 2.x to work with INTER-Mediator using models of CakePHP.
 
-To get more familiar with INTER-Mediator visit: http://inter-mediator.info/
+To get more familiar with INTER-Mediator visit: http://inter-mediator.org/
 
 ## Notice
 
@@ -71,7 +71,7 @@ Thanks to [Masayuki Nii](http://msyk.net/) (an author of "INTER-Mediator").
 
 ## MIT License
 
-Copyright (c) 2013 Atsushi Matsuo, Masayuki Nii
+Copyright (c) 2013-2014 Atsushi Matsuo, Masayuki Nii
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
