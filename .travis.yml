@@ -65,10 +65,11 @@ before_script:
   - mkdir -p build/logs
   - sh -c "if [ '$TRAVIS_PHP_VERSION' != '5.2' ]; then composer global require 'phpunit/phpunit=3.7.33'; fi"
   - sh -c "if [ '$TRAVIS_PHP_VERSION' != '5.2' ]; then ln -s ~/.composer/vendor/phpunit/phpunit/PHPUnit ./vendors/PHPUnit; fi"
+  - sh -c "if [ '$TRAVIS_PHP_VERSION' != '5.2' ]; then composer global require 'codeclimate/php-test-reporter'; fi"
 
 script:
   - ./lib/Cake/Console/cake test IMCake AllTests --stderr --coverage-clover build/logs/clover.xml --configuration phpunit.xml.dist
 
 after_script:
   - php vendor/bin/coveralls -v
-  - CODECLIMATE_REPO_TOKEN=8dd97901ab37efe7f583fc8f6eaaeeb6105bbf383202a0e09798f53a8bb497a8 ./vendor/bin/test-reporter
+  - CODECLIMATE_REPO_TOKEN=8dd97901ab37efe7f583fc8f6eaaeeb6105bbf383202a0e09798f53a8bb497a8 ./.composer/vendor/bin/test-reporter
