@@ -33,10 +33,10 @@ class IMCakeComponent extends Component
         
         $View = new $viewClass($this->Controller);
         
-        App::import('Helper','IMCake.IMCake');
-        $im = new IMCakeHelper($View);
+        App::import('Helper', 'IMCake.IMCake');
+        $helper = new IMCakeHelper($View);
         
-        echo $im->pageConstruct($this->Controller->modelClass, $View->render(), $id);
+        echo $helper->pageConstruct($this->Controller->modelClass, $View->render(), $id);
     }
 
 }
