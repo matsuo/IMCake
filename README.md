@@ -54,8 +54,8 @@ This product should be considered a work in progress, please test and use at you
 
 ## Requirements
 
-* CakePHP >= 2.3
-* PHP >= 5.3
+* CakePHP >= 2.5
+* PHP >= 5.4
 
 ## Supported Database
 
