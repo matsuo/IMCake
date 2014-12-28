@@ -1,4 +1,10 @@
-language: php
+language: 
+  - php
+  - objective-c
+
+os:
+  - linux
+  - osx
 
 php:
   - 5.2
